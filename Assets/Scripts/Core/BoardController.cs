@@ -25,6 +25,12 @@ public class BoardController : MonoBehaviour
         ClearBoard();
 
         int totalSlots = rows * columns;
+
+        if (totalSlots % 2 != 0)
+        {
+            totalSlots -= 1;
+        }
+
         int requiredPairs = totalSlots / 2;
 
         List<CardDefinition> selectedCards = BuildCardDeck(requiredPairs);

@@ -252,8 +252,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbef3f25affa442489b15250360b4399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 5
-  columns: 6
+  rows: 3
+  columns: 3
   boardContainer: {fileID: 79809321}
   cardPrefab: {fileID: 9046782288715999947, guid: b8a07a0e5b744e84a97ef957243e89a9, type: 3}
   cardDefinitions:
