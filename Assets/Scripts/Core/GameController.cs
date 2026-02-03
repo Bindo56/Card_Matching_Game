@@ -58,6 +58,7 @@ public class GameController : MonoBehaviour
             second.SetState(CardState.Matched);
 
             GameEvents.MatchResolved?.Invoke(true);
+            Debug.Log("Matched");
         }
         else
         {
@@ -65,6 +66,7 @@ public class GameController : MonoBehaviour
             second.SetState(CardState.Hidden);
 
             GameEvents.MatchResolved?.Invoke(false);
+            Debug.Log(" Not Matched");
         }
 
         revealedCards.Clear();

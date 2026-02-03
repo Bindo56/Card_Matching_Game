@@ -156,10 +156,10 @@ RectTransform:
   m_Father: {fileID: 470626260}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000015258789, y: 0.00001335144}
-  m_SizeDelta: {x: 1165.44, y: 781.03}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0.00001335144}
+  m_SizeDelta: {x: 0, y: 781.03}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &79809322
 MonoBehaviour:
@@ -216,11 +216,11 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 1
   m_StartCorner: 0
-  m_StartAxis: 0
+  m_StartAxis: 1
   m_CellSize: {x: 100, y: 100}
-  m_Spacing: {x: 10, y: 10}
+  m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!1 &413754911
@@ -253,8 +253,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rows: 3
-  columns: 3
+  columns: 6
   boardContainer: {fileID: 79809321}
+  gridLayout: {fileID: 79809324}
   cardPrefab: {fileID: 9046782288715999947, guid: b8a07a0e5b744e84a97ef957243e89a9, type: 3}
   cardDefinitions:
   - {fileID: 11400000, guid: 4d13f4bade462954584bb6c7ac4577ad, type: 2}

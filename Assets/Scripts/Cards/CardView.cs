@@ -8,9 +8,15 @@ public class CardView : MonoBehaviour, IPointerDownHandler
 {
     public CardDefinition Definition { get; private set; }
     public CardState State { get; private set; }
+    RectTransform rectTransform;
     [SerializeField] Image frontImage;
+   
 
     // public CardDefinition Definition;
+    private void Awake()
+    {
+        rectTransform = GetComponent<RectTransform>();
+    }
     public void Initialize(CardDefinition definition)
     {
         Debug.Log($"Card initialized with pairId: {definition.pairId}");
@@ -29,6 +35,11 @@ public class CardView : MonoBehaviour, IPointerDownHandler
     {
         State = newState;
         // animation hook later
+    }
+
+    public void SetSize(Vector2 size)
+    {
+        rectTransform.sizeDelta = size;
     }
 
 
