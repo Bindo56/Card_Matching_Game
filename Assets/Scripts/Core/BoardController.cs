@@ -89,6 +89,15 @@ public class BoardController : MonoBehaviour
 
     // -------------------- SAVE / LOAD --------------------
 
+    public void Setup(int newRows, int newColumns)
+    {
+        rows = newRows;
+        columns = newColumns;
+
+        ConfigureGridLayout();
+        CreateBoard();
+    }
+
     public SaveData GetSaveData(int score)
     {
         SaveData data = new SaveData

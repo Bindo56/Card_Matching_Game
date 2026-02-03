@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class ScoreService : MonoBehaviour
 {
@@ -56,6 +57,10 @@ public class ScoreService : MonoBehaviour
     // Public API
     // -------------------------
 
+    public void Set(int value)
+    {
+        CurrentScore = value;
+    }
     public void RestoreScore(int score)
     {
         CurrentScore = score;

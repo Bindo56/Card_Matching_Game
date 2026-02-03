@@ -80,7 +80,7 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-         if (SaveService.HasSave())
+        /* if (SaveService.HasSave())
          {
              ContinueGame();
          }
@@ -90,7 +90,7 @@ public class GameController : MonoBehaviour
                 boardController.GetRow(),
                 boardController.GetColumn()
             );
-        }
+        }*/
     }
 
     private void OnApplicationQuit()
@@ -104,7 +104,7 @@ public class GameController : MonoBehaviour
 
         SaveData data = boardController.GetSaveData(scoreService.GetScore());
         SaveService.Save(data);
-        
+
     }
 
     private void TryRecoverGame()
@@ -125,11 +125,27 @@ public class GameController : MonoBehaviour
     {
         SaveService.Delete();
         scoreService.ResetScore();
-        //  boardController.Setup(rows, columns);
+        boardController.Setup(rows, columns);
+    }
+
+    private void LoadGame()
+    {
+        if (!SaveService.TryLoad(out SaveData data))
+        {
+            NewGame(5, 6);
+            return;
+        }
+
+        scoreService.Set(data.score);
+        boardController.RestoreFromSave(data);
     }
 
     public void ContinueGame()
     {
-        TryRecoverGame();
+        if (SaveService.HasSave())
+        {
+            LoadGame();
+            //ContinueGame();
+        }
     }
 }
