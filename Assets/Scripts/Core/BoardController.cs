@@ -19,22 +19,21 @@ public class BoardController : MonoBehaviour
 
     private void Awake()
     {
-        if (gridLayout == null)
+        if (gridLayout == null && boardContainer != null)
             gridLayout = boardContainer.GetComponent<GridLayoutGroup>();
     }
 
     private void Start()
     {
-        IsTallAspect();
         ApplyAspectAwareLayout();
         ConfigureGridLayout();
-        CreateBoard();
+       // CreateBoard();
     }
 
+    // -------------------- GRID SETUP --------------------
 
     private void ConfigureGridLayout()
     {
-       
         gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
         gridLayout.constraintCount = columns;
 
@@ -63,6 +62,7 @@ public class BoardController : MonoBehaviour
         return new Vector2(size, size);
     }
 
+    // -------------------- BOARD CREATION --------------------
 
     private void CreateBoard()
     {
@@ -72,7 +72,7 @@ public class BoardController : MonoBehaviour
 
         // Ensure even number for pairs
         if (totalSlots % 2 != 0)
-            totalSlots -= 1;
+            totalSlots--;
 
         int pairCount = totalSlots / 2;
 
@@ -87,6 +87,55 @@ public class BoardController : MonoBehaviour
         }
     }
 
+    // -------------------- SAVE / LOAD --------------------
+
+    public SaveData GetSaveData(int score)
+    {
+        SaveData data = new SaveData
+        {
+            score = score,
+            rows = rows,
+            columns = columns
+        };
+
+        foreach (CardView card in spawnedCards)
+        {
+            data.cards.Add(new CardSaveEntry
+            {
+                cardId = card.Definition.pairId,
+                siblingIndex = card.transform.GetSiblingIndex(),
+                state = card.State
+            });
+        }
+
+        return data;
+    }
+
+    public void RestoreFromSave(SaveData data)
+    {
+        ClearBoard();
+
+        rows = data.rows;
+        columns = data.columns;
+
+        ConfigureGridLayout();
+
+        data.cards.Sort((a, b) => a.siblingIndex.CompareTo(b.siblingIndex));
+
+        foreach (var entry in data.cards)
+        {
+            CardDefinition cardDetails =
+                cardDefinitions.Find(d => d.pairId == entry.cardId);
+
+            CardView card = Instantiate(cardPrefab, boardContainer);
+            card.Initialize(cardDetails);
+            card.SetStateInstant(entry.state);
+
+            spawnedCards.Add(card);
+        }
+    }
+
+    // -------------------- ASPECT HANDLING --------------------
 
     private void ApplyAspectAwareLayout()
     {
@@ -104,13 +153,13 @@ public class BoardController : MonoBehaviour
         }
     }
 
-
     private bool IsTallAspect()
     {
-        
         float aspect = (float)Screen.height / Screen.width;
-        return aspect > 1.7f; // catches 9:16, 9:18, most mobiles
+        return aspect > 1.7f; // 9:16, 9:18, most mobiles
     }
+
+    // -------------------- DECK UTILS --------------------
 
     private List<CardDefinition> BuildDeck(int pairCount)
     {
@@ -133,6 +182,11 @@ public class BoardController : MonoBehaviour
             (list[i], list[r]) = (list[r], list[i]);
         }
     }
+
+    // -------------------- HELPERS --------------------
+
+    public int GetRow() => rows;
+    public int GetColumn() => columns;
 
     private void ClearBoard()
     {

@@ -6,6 +6,10 @@ public class GameController : MonoBehaviour
 {
     private readonly List<CardView> revealedCards = new();
 
+
+    [SerializeField] private BoardController boardController;
+    [SerializeField] private ScoreService scoreService;
+
     private void OnEnable()
     {
         GameEvents.RequestCardFlip += HandleCardFlipRequest;
@@ -56,6 +60,8 @@ public class GameController : MonoBehaviour
         {
             first.SetState(CardState.Matched);
             second.SetState(CardState.Matched);
+            first.HideCard();
+            second.HideCard();
 
             GameEvents.MatchResolved?.Invoke(true);
             Debug.Log("Matched");
@@ -70,5 +76,60 @@ public class GameController : MonoBehaviour
         }
 
         revealedCards.Clear();
+    }
+
+    private void Start()
+    {
+         if (SaveService.HasSave())
+         {
+             ContinueGame();
+         }
+         else
+        {
+            NewGame(
+                boardController.GetRow(),
+                boardController.GetColumn()
+            );
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveGame();
+    }
+    public void SaveGame()
+    {
+        if (boardController == null || scoreService == null)
+            return;
+
+        SaveData data = boardController.GetSaveData(scoreService.GetScore());
+        SaveService.Save(data);
+        
+    }
+
+    private void TryRecoverGame()
+    {
+        if (!SaveService.TryLoad(out SaveData data))
+        {
+            Debug.Log("No saved game to recover.");
+            return;
+        }
+
+        //  scoreService.Set(data.score);
+        boardController.RestoreFromSave(data);
+    }
+
+    // -------------------- GAME FLOW --------------------
+
+    public void NewGame(int rows, int columns)
+    {
+        SaveService.Delete();
+        scoreService.ResetScore();
+        //  boardController.Setup(rows, columns);
+    }
+
+    public void ContinueGame()
+    {
+        TryRecoverGame();
     }
 }
