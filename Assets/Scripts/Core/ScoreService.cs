@@ -10,8 +10,7 @@ public class ScoreService : MonoBehaviour
     public int CurrentScore { get; private set; }
     public int CurrentCombo { get; private set; }
 
-    // UI / other systems can listen to these
-    public event Action<int> OnScoreChanged;
+    public event Action<int> OnScoreChanged; 
     public event Action<int> OnComboChanged;
 
     private void OnEnable()
@@ -29,10 +28,6 @@ public class ScoreService : MonoBehaviour
         ResetScore();
     }
 
-    // -------------------------
-    // Event handling
-    // -------------------------
-
     private void HandleMatchResolved(bool isMatch)
     {
         if (isMatch)
@@ -44,18 +39,15 @@ public class ScoreService : MonoBehaviour
             OnComboChanged?.Invoke(CurrentCombo);
             OnScoreChanged?.Invoke(CurrentScore);
 
-            Debug.Log($"[Score] Match +{addedScore} (Combo x{CurrentCombo})");
+           // Debug.Log($"[Score] Match +{addedScore} (Combo x{CurrentCombo})");
         }
         else
         {
             ResetCombo();
-            Debug.Log("[Score] Mismatch – combo reset");
+          //  Debug.Log("[Score] Mismatch – combo reset");
         }
     }
 
-    // -------------------------
-    // Public API
-    // -------------------------
 
     public void Set(int value)
     {
@@ -68,8 +60,6 @@ public class ScoreService : MonoBehaviour
 
         OnScoreChanged?.Invoke(CurrentScore);
         OnComboChanged?.Invoke(CurrentCombo);
-
-        Debug.Log($"[Score] Restored score: {CurrentScore}");
     }
 
     public int GetScore()
@@ -83,10 +73,6 @@ public class ScoreService : MonoBehaviour
         ResetCombo();
         OnScoreChanged?.Invoke(CurrentScore);
     }
-
-    // -------------------------
-    // Internals
-    // -------------------------
 
     private void ResetCombo()
     {

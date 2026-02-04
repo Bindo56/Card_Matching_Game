@@ -10,7 +10,7 @@ public static class SaveService
     {
         if (data == null)
         {
-            Debug.LogError("SaveService.Save called with NULL data");
+            Debug.LogError("Wrong format of save data");
             return;
         }
 

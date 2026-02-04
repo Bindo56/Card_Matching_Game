@@ -6,22 +6,20 @@ public class GameController : MonoBehaviour
 {
     private readonly List<CardView> revealedCards = new();
 
-
+    [Header("Other_Controller")]
+    [Tooltip("Add Board Controller")]
     [SerializeField] private BoardController boardController;
+    [Tooltip("Add Score Service")]
     [SerializeField] private ScoreService scoreService;
 
     private void OnEnable()
     {
         GameEvents.RequestCardFlip += HandleCardFlipRequest;
-        //  boardController.OnGameOver += SaveGame;
-       // GameEvents.GameOver += SaveGame;
     }
 
     private void OnDisable()
     {
         GameEvents.RequestCardFlip -= HandleCardFlipRequest;
-        // boardController.OnGameOver -= SaveGame;
-      //  GameEvents.GameOver -= SaveGame;
     }
 
     private void HandleCardFlipRequest(CardView card)
@@ -39,9 +37,9 @@ public class GameController : MonoBehaviour
 
     private void RevealCard(CardView card)
     {
-        Debug.Log($"Card {card.State} revealed.");
+      //  Debug.Log($"Card {card.State} revealed.");
         card.SetState(CardState.Revealed);
-        Debug.Log($"Card {card.State} revealed.");
+      //  Debug.Log($"Card {card.State} revealed.");
         revealedCards.Add(card);
         GameEvents.CardRevealed?.Invoke(card);
     }
@@ -54,7 +52,7 @@ public class GameController : MonoBehaviour
         CardView first = revealedCards[0];
         CardView second = revealedCards[1];
 
-        Debug.Log($"Resolving match between Card {first.Definition.pairId} and Card {second.Definition.pairId}.");
+      //  Debug.Log($"Resolving match between Card {first.Definition.pairId} and Card {second.Definition.pairId}.");
         first.SetState(CardState.Revealed);
         second.SetState(CardState.Revealed);
 
@@ -64,8 +62,6 @@ public class GameController : MonoBehaviour
         {
             first.SetState(CardState.Matched);
             second.SetState(CardState.Matched);
-            //  first.HideCard();
-            //  second.HideCard();
 
             GameEvents.MatchResolved?.Invoke(true);
             GameEvents.GameOverCheck.Invoke();
@@ -83,14 +79,10 @@ public class GameController : MonoBehaviour
         revealedCards.Clear();
     }
 
-    private void Start()
-    {
-
-    }
 
     private void OnApplicationQuit()
     {
-      //  SaveGame();
+        //  SaveGame();
     }
     public void SaveGame()
     {
@@ -109,8 +101,6 @@ public class GameController : MonoBehaviour
             Debug.Log("No saved game to recover.");
             return;
         }
-
-        //  scoreService.Set(data.score);
         boardController.RestoreFromSave(data);
     }
 
@@ -139,21 +129,21 @@ public class GameController : MonoBehaviour
     {
         if (!SaveService.TryLoad(out SaveData saveData))
         {
-            Debug.Log("LoadGame");
+           // Debug.Log("LoadGame");
             GameEvents.HideMenu?.Invoke();
             LoadGame();
             return;
         }
 
-        Debug.Log(saveData.MatchFinished + "Get status");
+       // Debug.Log(saveData.MatchFinished + "Get status");
         if (saveData.MatchFinished)
         {
 
-            Debug.Log("overGame");
+           // Debug.Log("overGame");
             GameEvents.GameOver?.Invoke();
             return;
         }
-        Debug.Log("resumeGame");
+       // Debug.Log("resumeGame");
         LoadGame();
         GameEvents.HideMenu?.Invoke();
 

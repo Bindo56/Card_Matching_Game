@@ -10,13 +10,16 @@ public class BoardController : MonoBehaviour
     [SerializeField] private int columns = 3;
 
     [Header("References")]
+    [Tooltip("Contanier where card will spawn inside it , IT MUST HAVE GRID LAYOUT GROUP")]
     [SerializeField] private RectTransform boardContainer;
+    [Tooltip("Contanier should have a GRID GROUP LAYOUT Component")]
     [SerializeField] private GridLayoutGroup gridLayout;
+    [Tooltip("Card PRefab")]
     [SerializeField] private CardView cardPrefab;
+    [Tooltip(" Add Card Scritable Object For Data")]
     [SerializeField] private List<CardDefinition> cardDefinitions;
 
-    private readonly List<CardView> spawnedCards = new();
-    //  public event System.Action OnGameOver;
+    readonly List<CardView> spawnedCards = new();
     SaveData saveData;
     bool isMatchFineshed;
 
@@ -48,8 +51,6 @@ public class BoardController : MonoBehaviour
         // CreateBoard();
     }
 
-    // -------------------- GRID SETUP --------------------
-
     private void ConfigureGridLayout()
     {
         gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
@@ -80,16 +81,13 @@ public class BoardController : MonoBehaviour
         return new Vector2(size, size);
     }
 
-    // -------------------- BOARD CREATION --------------------
-
     private void CreateBoard()
     {
         ClearBoard();
 
         int totalSlots = rows * columns;
 
-        // Ensure even number for pairs
-        if (totalSlots % 2 != 0)
+        if (totalSlots % 2 != 0) //pair
             totalSlots--;
 
         int pairCount = totalSlots / 2;
@@ -116,10 +114,16 @@ public class BoardController : MonoBehaviour
             }
         }
 
-        isMatchFineshed = true;
+        StartCoroutine(DelayGameOver());
 
+       // Debug.Log("[Board] Game Over – all cards matched");
+    }
+
+    IEnumerator DelayGameOver()
+    {
+        isMatchFineshed = true;
         SaveService.Delete();
-        Debug.Log("[Board] Game Over – all cards matched");
+        yield return new WaitForSeconds(0.6f);
         GameEvents.GameOver?.Invoke();
     }
 
@@ -184,19 +188,19 @@ public class BoardController : MonoBehaviour
         }
     }
 
-    // -------------------- ASPECT HANDLING --------------------
+    // Mobile and Screen check
 
     private void ApplyAspectAwareLayout()
     {
         if (IsTallAspect())
         {
-            // Mobile / portrait
+            // Mobile
             gridLayout.spacing = new Vector2(12f, 18f);
             gridLayout.padding = new RectOffset(24, 24, 32, 32);
         }
         else
         {
-            // Desktop / landscape
+            // Screen
             gridLayout.spacing = new Vector2(10f, 10f);
             gridLayout.padding = new RectOffset(20, 20, 20, 20);
         }
@@ -232,7 +236,7 @@ public class BoardController : MonoBehaviour
         }
     }
 
-    // -------------------- HELPERS --------------------
+    //Helper Methods
 
     public int GetRow() => rows;
     public int GetColumn() => columns;
